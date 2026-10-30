@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mental: Programação Front-End | SENAI UC09</title>
+    <style>
+        :root {
+            --bg-primary: #070F1E;
+            --bg-secondary: #0B192C;
+            --bg-card: #112238;
+            --bg-card-hover: #172D4A;
+            --border-color: #1E3E62;
+            --border-accent: #2E5A88;
+            --text-main: #FFFFFF;
+            --text-muted: #94A3B8;
+            
+            /* Cores dos 4 Pilares */
+            --color-projetos: #8B5CF6;
+            --color-html: #F97316;
+            --color-css: #0284C7;
+            --color-js: #FACC15;
+            
+            /* Siemens / Tech Accents */
+            --siemens-teal: #00828A;
+            --siemens-cyan: #00A3E0;
+            --siemens-green: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Top Bar de Identificação */
+        .topbar {
+            background: linear-gradient(90deg, #090e17 0%, #1e293b 100%);
+            border-bottom: 2px solid var(--siemens-green);
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .topbar-left {
+            color: var(--siemens-green);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topbar-right {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Header de Apresentação */
+        .header {
+            max-width: 1280px;
+            margin: 24px auto 16px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(90deg, var(--siemens-cyan), var(--siemens-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 820px;
+            margin: 0 auto 16px;
+        }
+
+        /* Barra de Controle: Filtros, Busca e Ações */
+        .controls-container {
+            max-width: 1280px;
+            margin: 0 auto 24px;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 260px;
+            max-width: 380px;
+        }
+
+        .search-box input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px 10px 38px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--siemens-cyan);
+            box-shadow: 0 0 10px rgba(0, 163, 224, 0.3);
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-main);
+            border-color: var(--border-accent);
+        }
+
+        .filter-btn.active[data-filter="all"] {
+            background: var(--siemens-teal);
+            color: white;
+            border-color: var(--siemens-teal);
+        }
+        .filter-btn.active[data-filter="projetos"] {
+            background: var(--color-projetos);
+            color: white;
+            border-color: var(--color-projetos);
+        }
+        .filter-btn.active[data-filter="html"] {
+            background: var(--color-html);
+            color: white;
+            border-color: var(--color-html);
+        }
+        .filter-btn.active[data-filter="css"] {
+            background: var(--color-css);
+            color: white;
+            border-color: var(--color-css);
+        }
+        .filter-btn.active[data-filter="js"] {
+            background: var(--color-js);
+            color: #000;
+            border-color: var(--color-js);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--siemens-cyan);
+            background: var(--bg-card-hover);
+        }
+
+        /* Layout Principal do Mapa Mental */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 980px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Canvas / Grid dos 4 Ramos */
+        .mindmap-canvas {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Card do Pilar Principal */
+        .pillar-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .pillar-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .pillar-card.p-projetos { border-left: 6px solid var(--color-projetos); }
+        .pillar-card.p-html { border-left: 6px solid var(--color-html); }
+        .pillar-card.p-css { border-left: 6px solid var(--color-css); }
+        .pillar-card.p-js { border-left: 6px solid var(--color-js); }
+
+        .pillar-header {
+            padding: 16px 20px;
+            background: var(--bg-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .pillar-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .pillar-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .p-projetos .pillar-icon { background: rgba(139, 92, 246, 0.2); color: var(--color-projetos); }
+        .p-html .pillar-icon { background: rgba(249, 115, 22, 0.2); color: var(--color-html); }
+        .p-css .pillar-icon { background: rgba(2, 132, 199, 0.2); color: var(--color-css); }
+        .p-js .pillar-icon { background: rgba(250, 204, 21, 0.2); color: var(--color-js); }
+
+        .toggle-arrow {
+            font-size: 12px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .pillar-card.collapsed .toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .pillar-card.collapsed .pillar-content {
+            display: none;
+        }
+
+        .pillar-content {
+            padding: 16px 20px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        /* Grupo de Subconceitos */
+        .subgroup-box {
+            background: rgba(7, 15, 30, 0.6);
+            border: 1px dashed var(--border-accent);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .subgroup-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--siemens-cyan);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nodes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Nó de Conceito Clicável */
+        .concept-node {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .concept-node:hover {
+            border-color: var(--siemens-cyan);
+            background: var(--bg-card-hover);
+            transform: translateX(3px);
+        }
+
+        .concept-node.active-node {
+            border-color: var(--siemens-green);
+            background: rgba(16, 185, 129, 0.15);
+            color: #A7F3D0;
+        }
+
+        .concept-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-muted);
+            font-family: monospace;
+        }
+
+        /* Painel Lateral de Detalhes (Inspector) */
+        .inspector-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            position: sticky;
+            top: 72px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .inspector-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .inspector-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .inspector-section {
+            margin-bottom: 14px;
+        }
+
+        .inspector-section-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--siemens-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .inspector-section-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .code-snippet {
+            background: #000814;
+            border: 1px solid var(--border-accent);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 11px;
+            color: #38BDF8;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-top: 6px;
+        }
+
+        .inspector-empty {
+            text-align: center;
+            padding: 40px 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Rodapé de Governança */
+        .footer {
+            margin-top: auto;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 20px 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .footer strong {
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Topbar Corporativa / SENAI -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <span>🎓 SENAI UC09 • Codificação para Front-End</span>
+            <span style="font-weight: normal; color: #FFFFFF;">• Mapa Mental Conceitual</span>
+        </div>
+        <div class="topbar-right">
+            Autor: <strong>Amador Corrêa Vicente</strong> • Ambiente Corporativo Siemens
+        </div>
+    </header>
+
+    <!-- Cabeçalho -->
+    <section class="header">
+        <h1>Mapa Mental: <span>Programação Front-End</span></h1>
+        <p>Visão arquitetural integrada dos quatro pilares essenciais do desenvolvimento moderno: Gestão de Projetos, Estrutura Semântica (HTML5), Estilização Responsiva (CSS3) e Comportamento Dinâmico (JavaScript).</p>
+    </section>
+
+    <!-- Controles Interativos -->
+    <section class="controls-container">
+        <!-- Campo de Busca -->
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Pesquisar conceito (ex: DOM, Flexbox, Git, a11y)..." oninput="filterConcepts()">
+        </div>
+
+        <!-- Filtros por Pilar -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">🌐 Todos os Pilares</button>
+            <button class="filter-btn" data-filter="projetos" onclick="setFilter('projetos', this)">📁 Projetos</button>
+            <button class="filter-btn" data-filter="html" onclick="setFilter('html', this)">🟧 HTML5</button>
+            <button class="filter-btn" data-filter="css" onclick="setFilter('css', this)">🟦 CSS3</button>
+            <button class="filter-btn" data-filter="js" onclick="setFilter('js', this)">🟨 JavaScript</button>
+        </div>
+
+        <!-- Ações Globais -->
+        <div class="action-buttons">
+            <button class="action-btn" onclick="toggleAll(false)">➕ Expandir Tudo</button>
+            <button class="action-btn" onclick="toggleAll(true)">➖ Recolher Tudo</button>
+        </div>
+    </section>
+
+    <!-- Estrutura Principal: Mapa Mental + Painel Inspetor -->
+    <main class="main-container">
+        
+        <!-- Canvas dos 4 Pilares -->
+        <div class="mindmap-canvas" id="mindmapCanvas">
+
+            <!-- PILAR 1: PROJETOS FRONT-END -->
+            <article class="pillar-card p-projetos" data-pillar="projetos">
+                <div class="pillar-header" onclick="togglePillar(this)">
+                    <div class="pillar-title">
+                        <div class="pillar-icon">📁</div>
+                        <div>
+                            <div>1. Gestão e Arquitetura de Projetos</div>
+                            <div style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Escopo, Design System, Versionamento e Deploy Contínuo</div>
+                        </div>
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="pillar-content">
+                    <!-- Subgrupo 1 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">🎯 Planejamento & UX/UI</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('wireframe')">
+                                <span>Wireframe & Rafe Estrutural</span>
+                                <span class="concept-tag">Layout</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('requisitos')">
+                                <span>Requisitos Funcionais (RF)</span>
+                                <span class="concept-tag">Escopo</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('design-system')">
+                                <span>Design System & Paleta</span>
+                                <span class="concept-tag">Identidade</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subgrupo 2 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">🗂️ Organização & Git</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('pastas')">
+                                <span>Arquitetura de Pastas</span>
+                                <span class="concept-tag">Clean Code</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('git')">
+                                <span>Controle de Versão (Git/GitHub)</span>
+                                <span class="concept-tag">VCS</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('deploy')">
+                                <span>Deploy (GitHub Pages)</span>
+                                <span class="concept-tag">Produção</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PILAR 2: HTML5 -->
+            <article class="pillar-card p-html" data-pillar="html">
+                <div class="pillar-header" onclick="togglePillar(this)">
+                    <div class="pillar-title">
+                        <div class="pillar-icon">🟧</div>
+                        <div>
+                            <div>2. HTML5: Estrutura & Semântica</div>
+                            <div style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Esqueleto da página, tags semânticas, acessibilidade e formulários</div>
+                        </div>
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="pillar-content">
+                    <!-- Subgrupo 1 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">🏛️ Semântica & Estrutura</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('semantica')">
+                                <span>Tags Semânticas (header, nav, main)</span>
+                                <span class="concept-tag">HTML5</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('hierarquia')">
+                                <span>Hierarquia de Títulos (h1-h6)</span>
+                                <span class="concept-tag">SEO</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('dom')">
+                                <span>Árvore DOM (Document Object Model)</span>
+                                <span class="concept-tag">Estrutura</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subgrupo 2 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">♿ Acessibilidade & Formulários</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('a11y')">
+                                <span>Acessibilidade (a11y & ARIA)</span>
+                                <span class="concept-tag">Inclusão</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('formularios')">
+                                <span>Formulários & Validação Nativa</span>
+                                <span class="concept-tag">Forms</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('meta-tags')">
+                                <span>Meta Tags & Viewport</span>
+                                <span class="concept-tag">Head</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PILAR 3: CSS3 -->
+            <article class="pillar-card p-css" data-pillar="css">
+                <div class="pillar-header" onclick="togglePillar(this)">
+                    <div class="pillar-title">
+                        <div class="pillar-icon">🟦</div>
+                        <div>
+                            <div>3. CSS3: Estilização & Design Responsivo</div>
+                            <div style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Box Model, Flexbox, Grid, Media Queries e Variáveis Modernas</div>
+                        </div>
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="pillar-content">
+                    <!-- Subgrupo 1 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">📐 Box Model & Layouts</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('box-model')">
+                                <span>Box Model (Margin, Border, Padding)</span>
+                                <span class="concept-tag">Base</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('flexbox')">
+                                <span>Flexbox (Alinhamento 1D)</span>
+                                <span class="concept-tag">Layout</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('grid')">
+                                <span>CSS Grid (Matriz 2D)</span>
+                                <span class="concept-tag">Layout</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subgrupo 2 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">📱 Responsividade & Recursos</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('media-queries')">
+                                <span>Media Queries & Breakpoints</span>
+                                <span class="concept-tag">Responsivo</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('css-variables')">
+                                <span>Variáveis CSS (:root)</span>
+                                <span class="concept-tag">Moderno</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('animacoes')">
+                                <span>Transições & Microinterações</span>
+                                <span class="concept-tag">UX</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PILAR 4: JAVASCRIPT -->
+            <article class="pillar-card p-js" data-pillar="js">
+                <div class="pillar-header" onclick="togglePillar(this)">
+                    <div class="pillar-title">
+                        <div class="pillar-icon">🟨</div>
+                        <div>
+                            <div>4. JavaScript: Lógica & Dinamismo</div>
+                            <div style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Manipulação de DOM, Eventos, Funções, Assincronismo e LocalStorage</div>
+                        </div>
+                    </div>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="pillar-content">
+                    <!-- Subgrupo 1 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">⚡ Fundamentos & DOM</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('js-fundamentos')">
+                                <span>Variáveis (let/const) & Tipos</span>
+                                <span class="concept-tag">Sintaxe</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('js-dom')">
+                                <span>Manipulação da DOM</span>
+                                <span class="concept-tag">DOM</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('js-eventos')">
+                                <span>Eventos (addEventListener)</span>
+                                <span class="concept-tag">Interação</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subgrupo 2 -->
+                    <div class="subgroup-box">
+                        <div class="subgroup-title">🔄 Dados & Assincronismo</div>
+                        <div class="nodes-list">
+                            <div class="concept-node" onclick="showDetail('js-fetch')">
+                                <span>Fetch API & Requisições Assíncronas</span>
+                                <span class="concept-tag">API/RAG</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('js-storage')">
+                                <span>LocalStorage & Persistência</span>
+                                <span class="concept-tag">Dados</span>
+                            </div>
+                            <div class="concept-node" onclick="showDetail('js-arrays')">
+                                <span>Métodos de Array (map, filter)</span>
+                                <span class="concept-tag">Lógica</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Painel Lateral: Inspetor de Detalhes -->
+        <aside class="inspector-panel" id="inspectorPanel">
+            <div id="inspectorContent">
+                <div class="inspector-empty">
+                    <div style="font-size: 32px; margin-bottom: 12px;">💡</div>
+                    <strong style="color: var(--text-main); display: block; margin-bottom: 6px;">Nenhum conceito selecionado</strong>
+                    Clique em qualquer item do mapa mental para visualizar a definição técnica, a importância para o Front-End e exemplos de sintaxe.
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Rodapé de Governança -->
+    <footer class="footer">
+        <div>
+            Desenvolvido por <strong>Amador Corrêa Vicente</strong> • Matrícula SENAI UC09 - Codificação para Front-End
+        </div>
+        <div style="font-size: 11px; margin-top: 4px; color: #64748B;">
+            Documento em conformidade com as Diretrizes Técnicas Corporativas Siemens • Padrão Acessível e Pesquisável para PCDs
+        </div>
+    </footer>
+
+    <!-- Script Interativo do Mapa Mental -->
+    <script>
+        // Banco de Dados Técnico dos Conceitos do Mapa Mental
+        const conceptDatabase = {
+            // PROJETOS
+            'wireframe': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Wireframe & Rafe Estrutural',
+                whatIs: 'Esboço visual de baixa ou média fidelidade que define o esqueleto, a hierarquia de informações e a disposição dos elementos antes da escrita do código.',
+                whyUse: 'Evita retrabalho estrutural, alinha expectativas com o cliente/professor e estabelece os pontos de quebra (breakpoints) responsivos com antecedência.',
+                code: '<!-- Fluxo de Desenvolvimento:\n1. Rafe no Papel/Figma\n2. Aprovação de UX/UI\n3. Codificação HTML Semântica\n4. Aplicação de Estilos CSS -->',
+                bestPractice: 'Nunca inicie o CSS sem um wireframe claro das versões Desktop (1200px), Tablet (768px) e Mobile (390px).'
+            },
+            'requisitos': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Requisitos Funcionais (RF)',
+                whatIs: 'Declarações técnicas formais que descrevem exatamente as funções, comportamentos e regras de negócio que o sistema web deve executar.',
+                whyUse: 'Garante rastreabilidade e critérios objetivos de aceite para avaliação e testes de homologação de software.',
+                code: '// Exemplo de Requisito Funcional:\n// RF01: O sistema deve aplicar 15% de desconto automático para pagamentos via Pix.\n// RF02: O mini-cart deve reter os itens reservados por no máximo 15 minutos.',
+                bestPractice: 'Formule sempre no infinitivo ou iniciando por "O sistema deve...".'
+            },
+            'design-system': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Design System & Paleta de Cores',
+                whatIs: 'Conjunto padronizado de regras visuais, componentes reutilizáveis, tipografias e paletas de cores que asseguram consistência em toda a interface.',
+                whyUse: 'Mantém coerência visual de ponta a ponta e acelera o desenvolvimento permitindo reutilização sistemática de componentes.',
+                code: ':root {\n  --color-primary: #00828A; /* Siemens Teal */\n  --color-accent: #10B981;  /* Confirmação */\n  --color-bg: #070F1E;      /* Dark Mode */\n}',
+                bestPractice: 'Verifique o contraste de cores conforme as diretrizes WCAG AA (mínimo de 4.5:1 para textos normais).'
+            },
+            'pastas': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Arquitetura de Pastas e Clean Code',
+                whatIs: 'Organização lógica e padronizada de arquivos em diretórios dedicados (ex: css/, js/, img/, docs/).',
+                whyUse: 'Facilita a manutenção em equipe, evita links quebrados e viabiliza a publicação automatizada em servidores de produção.',
+                code: 'projeto-ecommerce/\n├── index.html\n├── mobile_tablet.html\n├── rafe.html\n├── css/ (styles.css)\n├── js/ (main.js)\n└── img/ (icons/, banners/)',
+                bestPractice: 'Utilize nomes de arquivos minúsculos, sem acentos e separados por hífens (kebab-case).'
+            },
+            'git': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Controle de Versão (Git & GitHub)',
+                whatIs: 'Sistema distribuído de controle de versões que registra o histórico de alterações no código e viabiliza o trabalho colaborativo seguro.',
+                whyUse: 'Permite reverter erros com segurança, trabalhar em branches paralelas e manter o código seguro na nuvem.',
+                code: '# Comandos essenciais Git:\ngit status\ngit add .\ngit commit -m "feat: implementa checkout pix com qr code"\ngit push origin main',
+                bestPractice: 'Escreva mensagens de commit claras e semânticas descrevendo o "porquê" da alteração.'
+            },
+            'deploy': {
+                pillar: 'Projetos',
+                badgeColor: '#8B5CF6',
+                title: 'Deploy Contínuo (GitHub Pages)',
+                whatIs: 'Processo de publicação que disponibiliza a aplicação web em um servidor público com link acessível via HTTPS.',
+                whyUse: 'Permite que professores, recrutadores e usuários finais acessem a solução real em tempo real sem necessidade de servidores locais.',
+                code: 'URL Pública:\nhttps://amadorcv1964.github.io/projeto-ecommerce/',
+                bestPractice: 'Certifique-se de que todos os caminhos para imagens e arquivos externos sejam relativos (ex: ./img/foto.jpg).'
+            },
+
+            // HTML5
+            'semantica': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Tags Semânticas (HTML5)',
+                whatIs: 'Elementos que dão significado explícito ao conteúdo que envolvem (ex: <header>, <nav>, <main>, <article>, <section>, <footer>) em vez de simples <div> genéricas.',
+                whyUse: 'Essencial para motores de busca (SEO) e leitores de tela usados por pessoas com deficiência visual.',
+                code: '<header>\n  <nav>\n    <a href="#home">Início</a>\n  </nav>\n</header>\n<main>\n  <section>Conteúdo Principal</section>\n</main>\n<footer>Rodapé</footer>',
+                bestPractice: 'Evite a "divite" (excesso de divs sem propósito semântico).'
+            },
+            'hierarquia': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Hierarquia de Títulos (h1 a h6)',
+                whatIs: 'Estruturação lógica dos níveis de títulos de uma página, onde <h1> é o título principal do documento e <h6> o subtítulo mais específico.',
+                whyUse: 'Define o índice de leitura para robôs do Google e tecnologias assistivas.',
+                code: '<h1>E-commerce Game Mania</h1>\n  <h2>Hardware & GPUs</h2>\n    <h3>Placas RTX Série 40</h3>',
+                bestPractice: 'Utilize exatamente um único <h1> por página representando o tema central do documento.'
+            },
+            'dom': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Árvore DOM (Document Object Model)',
+                whatIs: 'Representação em árvore de nós em memória criada pelo navegador a partir do arquivo HTML.',
+                whyUse: 'É a ponte que permite ao JavaScript inspecionar, alterar, adicionar ou remover elementos da página dinamicamente.',
+                code: '// Acesso à árvore DOM via JavaScript:\nconst titulo = document.querySelector("h1");\ntitulo.style.color = "#00A3E0";',
+                bestPractice: 'Mantenha o HTML limpo e bem aninhado para garantir renderização rápida do DOM.'
+            },
+            'a11y': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Acessibilidade Digital (a11y & ARIA)',
+                whatIs: 'Práticas de codificação que tornam a interface acessível a qualquer pessoa, incluindo pessoas com deficiência visual, auditiva ou motora.',
+                whyUse: 'Conformidade legal, inclusão social e cumprimento mandatório das políticas corporativas Siemens.',
+                code: '<button aria-label="Fechar gaveta do carrinho" onclick="closeCart()">\n  <span aria-hidden="true">×</span>\n</button>\n<img src="gpu.jpg" alt="Placa de vídeo GeForce RTX 4070">',
+                bestPractice: 'Nunca deixe imagens informativas com atributo alt vazio.'
+            },
+            'formularios': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Formulários & Validação Nativa',
+                whatIs: 'Mecanismo para capturar dados de entrada do usuário com validação de tipo, obrigatoriedade e padrões.',
+                whyUse: 'Previne envio de dados corrompidos para o servidor diretamente na camada do cliente.',
+                code: '<form onsubmit="validar(event)">\n  <input type="email" required placeholder="Digite seu e-mail">\n  <input type="tel" pattern="[0-9]{11}" placeholder="DDD + Telefone">\n  <button type="submit">Enviar</button>\n</form>',
+                bestPractice: 'Associe sempre cada <input> a uma <label> com o atributo "for" correspondente ao "id".'
+            },
+            'meta-tags': {
+                pillar: 'HTML5',
+                badgeColor: '#F97316',
+                title: 'Meta Tags & Viewport',
+                whatIs: 'Instruções invisíveis localizadas dentro da tag <head> que configuram a decodificação de caracteres e o comportamento em dispositivos móveis.',
+                whyUse: 'Garante acentuação perfeita sem mojibake (UTF-8) e habilita a escala correta em celulares.',
+                code: '<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<meta name="description" content="E-commerce gamer responsivo">',
+                bestPractice: 'A tag viewport é obrigatória para que o CSS responsivo funcione em smartphones.'
+            },
+
+            // CSS3
+            'box-model': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'CSS Box Model',
+                whatIs: 'Modelo conceitual onde todo elemento HTML é representado por uma caixa composta por: Content (conteúdo), Padding (espaçamento interno), Border (borda) e Margin (espaçamento externo).',
+                whyUse: 'Compreender o Box Model é fundamental para posicionar elementos sem quebrar o layout.',
+                code: '* {\n  box-sizing: border-box; /* Inclui padding e border na largura total */\n  margin: 0;\n  padding: 0;\n}',
+                bestPractice: 'Utilize universalmente `box-sizing: border-box` no início de qualquer folha de estilos.'
+            },
+            'flexbox': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'Flexbox (Layout Unidimensional)',
+                whatIs: 'Módulo de layout projetado para distribuir espaço e alinhar itens ao longo de um eixo principal (linha ou coluna).',
+                whyUse: 'Perfeito para barras de navegação, cabeçalhos, alinhamentos verticais centralizados e componentes móveis.',
+                code: '.navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 16px;\n}',
+                bestPractice: 'Prefira Flexbox para barras de navegação e componentes em 1 dimensão.'
+            },
+            'grid': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'CSS Grid (Layout Bidimensional)',
+                whatIs: 'Sistema de layout baseado em linhas e colunas para criar arquiteturas de páginas complexas e vitrines de produtos.',
+                whyUse: 'Permite construir grades completas (como grids de 12 colunas) sem necessidade de cálculos matemáticos manuais.',
+                code: '.catalogo {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: 20px;\n}',
+                bestPractice: 'Use CSS Grid para a estrutura macro da página e Flexbox para os componentes internos dos cards.'
+            },
+            'media-queries': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'Media Queries & Breakpoints',
+                whatIs: 'Regras condicionais do CSS que aplicam estilos específicos de acordo com a largura da tela ou tipo de mídia.',
+                whyUse: 'Garante que a mesma página web funcione perfeitamente em celulares (390px), tablets (768px) e monitores ultrawide (1200px+).',
+                code: '/* Desktop: 4 colunas */\n.grid { grid-template-columns: repeat(4, 1fr); }\n\n/* Mobile: 1 coluna */\n@media (max-width: 768px) {\n  .grid { grid-template-columns: 1fr; }\n}',
+                bestPractice: 'Adote a filosofia Mobile First: codifique para telas pequenas primeiro e expanda com min-width.'
+            },
+            'css-variables': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'Variáveis CSS (Custom Properties)',
+                whatIs: 'Valores reutilizáveis declarados no seletor `:root` que podem ser consumidos dinamicamente por todo o CSS.',
+                whyUse: 'Facilita temas escuros/claros (Dark/Light mode) e alterações rápidas de paleta de cores corporativa.',
+                code: ':root {\n  --brand-color: #00828A;\n}\n\n.btn {\n  background-color: var(--brand-color);\n}',
+                bestPractice: 'Centralize cores, espaçamentos e fontes em variáveis no topo do arquivo CSS.'
+            },
+            'animacoes': {
+                pillar: 'CSS3',
+                badgeColor: '#0284C7',
+                title: 'Transições & Microinterações',
+                whatIs: 'Mudanças suaves de propriedades CSS ao longo do tempo em resposta a ações do usuário (como hover, focus ou clique).',
+                whyUse: 'Aumenta a percepção de fluidez, modernidade e dá feedback tátil visual imediato.',
+                code: '.card {\n  transition: transform 0.2s ease, box-shadow 0.2s ease;\n}\n.card:hover {\n  transform: translateY(-4px);\n  box-shadow: 0 8px 16px rgba(0,0,0,0.3);\n}',
+                bestPractice: 'Mantenha as transições curtas (entre 150ms e 300ms) para não atrasar a interação do usuário.'
+            },
+
+            // JAVASCRIPT
+            'js-fundamentos': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'Fundamentos da Linguagem & Sintaxe',
+                whatIs: 'Bases da programação em JavaScript: variáveis de escopo (`let` e `const`), tipos primitivos (string, number, boolean) e estruturas de controle (`if`, `switch`).',
+                whyUse: 'É a base necessária para estruturar qualquer regra de negócio ou interação dinâmica no navegador.',
+                code: 'const precoOriginal = 1299.00;\nlet descontoPix = 0.15;\n\nfunction calcularValorPix(valor) {\n  return valor * (1 - descontoPix);\n}',
+                bestPractice: 'Evite o uso de `var` em projetos modernos; use estritamente `const` por padrão e `let` quando houver reatribuição.'
+            },
+            'js-dom': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'Manipulação Dinâmica do DOM',
+                whatIs: 'Métodos para selecionar, criar, alterar e remover elementos HTML diretamente em tempo de execução.',
+                whyUse: 'Permite atualizar preços, mensagens, selos e abas de pagamento instantaneamente sem precisar recarregar a página.',
+                code: 'const badge = document.getElementById("selo-desconto");\nbadge.textContent = "15% OFF PIX";\nbadge.classList.add("ativo");',
+                bestPractice: 'Prefira `document.querySelector` e `document.querySelectorAll` para seleções flexíveis com sintaxe CSS.'
+            },
+            'js-eventos': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'Eventos & Escuta (addEventListener)',
+                whatIs: 'Mecanismo de monitoramento que executa uma função quando uma ação específica ocorre (ex: clique, digitação, envio de formulário).',
+                whyUse: 'Cria interfaces ricas, reativas e interativas que respondem em tempo real às decisões do usuário.',
+                code: 'const botaoPix = document.getElementById("btn-pix");\n\nbotaoPix.addEventListener("click", () => {\n  console.log("Aba Pix selecionada");\n  abrirModalPix();\n});',
+                bestPractice: 'Utilize `event.preventDefault()` em submissões de formulário para evitar o recarregamento indesejado da página.'
+            },
+            'js-fetch': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'Fetch API & Assincronismo (async/await)',
+                whatIs: 'Interface nativa do navegador para realizar requisições HTTP assíncronas e consumir dados de APIs ou arquivos JSON.',
+                whyUse: 'Permite buscar catálogos de produtos, cotações de moedas e bases de conhecimento sem travar a navegação.',
+                code: 'async function carregarProdutos() {\n  const res = await fetch("./produtos.json");\n  const dados = await res.json();\n  renderizarCatalogo(dados);\n}',
+                bestPractice: 'Sempre envolva chamadas assíncronas em blocos `try...catch` para tratamento de erros de rede.'
+            },
+            'js-storage': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'LocalStorage & Persistência no Navegador',
+                whatIs: 'Mecanismo de armazenamento local chave-valor que mantém informações salvas mesmo após fechar ou atualizar o navegador.',
+                whyUse: 'Ideal para salvar itens do carrinho, preferências de tema escuro e dados temporários de sessão.',
+                code: '// Salvar carrinho no navegador\nlocalStorage.setItem("carrinho", JSON.stringify(itens));\n\n// Recuperar carrinho salvo\nconst salvo = JSON.parse(localStorage.getItem("carrinho"));',
+                bestPractice: 'Nunca armazene senhas, dados de cartão de crédito ou dados sensíveis no LocalStorage.'
+            },
+            'js-arrays': {
+                pillar: 'JavaScript',
+                badgeColor: '#FACC15',
+                title: 'Métodos de Array Funcionais',
+                whatIs: 'Funções nativas de alta ordem como `map()`, `filter()` e `reduce()` para manipulação declarativa de coleções de dados.',
+                whyUse: 'Substitui loops complexos `for` por código limpo, legível, imutável e de fácil manutenção.',
+                code: 'const produtos = [{nome: "GPU", preco: 2000}, {nome: "Mouse", preco: 200}];\n\n// Filtrar itens acima de R$ 500\nconst caros = produtos.filter(p => p.preco > 500);\n\n// Calcular total com reduce\nconst total = produtos.reduce((acc, p) => acc + p.preco, 0);',
+                bestPractice: 'Adote métodos imutáveis para garantir que os arrays originais permaneçam intactos durante a manipulação.'
+            }
+        };
+
+        // Função para Exibir Detalhes no Painel Inspetor
+        function showDetail(conceptKey) {
+            const data = conceptDatabase[conceptKey];
+            if (!data) return;
+
+            // Remove destaque ativo de nós anteriores
+            document.querySelectorAll('.concept-node').forEach(node => node.classList.remove('active-node'));
+            
+            // Adiciona destaque ao nó clicado
+            event.currentTarget.classList.add('active-node');
+
+            const content = `
+                <div class="inspector-badge" style="background: ${data.badgeColor}22; color: ${data.badgeColor}; border: 1px solid ${data.badgeColor};">
+                    ${data.pillar}
+                </div>
+                <h2 class="inspector-title">${data.title}</h2>
+
+                <div class="inspector-section">
+                    <div class="inspector-section-label">🎯 O que é:</div>
+                    <div class="inspector-section-text">${data.whatIs}</div>
+                </div>
+
+                <div class="inspector-section">
+                    <div class="inspector-section-label">💡 Por que é fundamental:</div>
+                    <div class="inspector-section-text">${data.whyUse}</div>
+                </div>
+
+                <div class="inspector-section">
+                    <div class="inspector-section-label">💻 Exemplo Prático de Código:</div>
+                    <pre class="code-snippet"><code>${data.code}</code></pre>
+                </div>
+
+                <div class="inspector-section" style="margin-bottom: 0;">
+                    <div class="inspector-section-label" style="color: var(--siemens-green);">🛡️ Padrão Corporativo & Boas Práticas:</div>
+                    <div class="inspector-section-text" style="color: #E2E8F0;">${data.bestPractice}</div>
+                </div>
+            `;
+
+            document.getElementById('inspectorContent').innerHTML = content;
+        }
+
+        // Função para Expandir/Recolher um Pilar
+        function togglePillar(headerElement) {
+            const card = headerElement.closest('.pillar-card');
+            card.classList.toggle('collapsed');
+        }
+
+        // Função para Expandir ou Recolher Todos
+        function toggleAll(collapse) {
+            document.querySelectorAll('.pillar-card').forEach(card => {
+                if (collapse) {
+                    card.classList.add('collapsed');
+                } else {
+                    card.classList.remove('collapsed');
+                }
+            });
+        }
+
+        // Função para Filtrar por Pilar
+        function setFilter(pillarName, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.pillar-card').forEach(card => {
+                if (pillarName === 'all' || card.getAttribute('data-pillar') === pillarName) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Função de Busca Preditiva em Tempo Real
+        function filterConcepts() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const nodes = document.querySelectorAll('.concept-node');
+
+            if (query === '') {
+                nodes.forEach(node => {
+                    node.style.display = 'flex';
+                    node.style.opacity = '1';
+                });
+                return;
+            }
+
+            nodes.forEach(node => {
+                const text = node.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    node.style.display = 'flex';
+                    node.style.opacity = '1';
+                    // Garante que o card pai esteja expandido para exibir o resultado
+                    node.closest('.pillar-card').classList.remove('collapsed');
+                } else {
+                    node.style.opacity = '0.2';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
