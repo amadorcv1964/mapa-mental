@@ -214,6 +214,12 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             align-items: start;
+            transition: all 0.3s ease;
+        }
+
+        .mindmap-wrapper.single-pillar-view {
+            grid-template-columns: minmax(320px, 720px);
+            justify-content: center;
         }
 
         @media (max-width: 1100px) {
@@ -574,8 +580,8 @@
     <!-- Mapa Mental - 4 Pilares -->
     <main class="mindmap-wrapper">
 
-        <!-- Pilar 1: Projetos -->
-        <div class="pillar-card proj" id="pillar-projetos">
+        <!-- Pilar 1: Projetos (Com classes 'proj' e 'projetos' para correspondência total) -->
+        <div class="pillar-card proj projetos" data-pillar="projetos" id="pillar-projetos">
             <div class="pillar-header" onclick="togglePillar(this)">
                 <div class="pillar-title-group">
                     <div class="pillar-icon">📁</div>
@@ -621,7 +627,7 @@
         </div>
 
         <!-- Pilar 2: HTML5 -->
-        <div class="pillar-card html" id="pillar-html">
+        <div class="pillar-card html" data-pillar="html" id="pillar-html">
             <div class="pillar-header" onclick="togglePillar(this)">
                 <div class="pillar-title-group">
                     <div class="pillar-icon">🟧</div>
@@ -667,7 +673,7 @@
         </div>
 
         <!-- Pilar 3: CSS3 -->
-        <div class="pillar-card css" id="pillar-css">
+        <div class="pillar-card css" data-pillar="css" id="pillar-css">
             <div class="pillar-header" onclick="togglePillar(this)">
                 <div class="pillar-title-group">
                     <div class="pillar-icon">🟦</div>
@@ -713,7 +719,7 @@
         </div>
 
         <!-- Pilar 4: JavaScript -->
-        <div class="pillar-card js" id="pillar-js">
+        <div class="pillar-card js" data-pillar="js" id="pillar-js">
             <div class="pillar-header" onclick="togglePillar(this)">
                 <div class="pillar-title-group">
                     <div class="pillar-icon">🟨</div>
@@ -1261,16 +1267,22 @@ input.addEventListener('input', () => {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             buttonElement.classList.add('active');
 
+            const wrapper = document.querySelector('.mindmap-wrapper');
+            if (filterType === 'all') {
+                wrapper.classList.remove('single-pillar-view');
+            } else {
+                wrapper.classList.add('single-pillar-view');
+            }
+
             const pillars = document.querySelectorAll('.pillar-card');
             pillars.forEach(pillar => {
                 if (filterType === 'all') {
-                    pillar.style.display = 'block';
+                    pillar.style.display = '';
                 } else {
-                    if (pillar.classList.contains(filterType)) {
-                        pillar.style.display = 'block';
-                    } else {
-                        pillar.style.display = 'none';
-                    }
+                    const isMatch = pillar.classList.contains(filterType) || 
+                                    (filterType === 'projetos' && pillar.classList.contains('proj')) ||
+                                    pillar.getAttribute('data-pillar') === filterType;
+                    pillar.style.display = isMatch ? '' : 'none';
                 }
             });
         }
